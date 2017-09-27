@@ -20,15 +20,15 @@ var con = mysql.createConnection({
 bot.on('message', function(event) {
 	console.log(event); //把收到訊息的 event 印出來看看
 
-  con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  var sql = "INSERT INTO msg_log (userid, msg) VALUES (" & event.source.userid &"," & event.message.text")";
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
-});
+//   con.connect(function(err) {
+//   if (err) throw err;
+//   console.log("Connected!");
+//   var sql = "INSERT INTO msg_log (userid, msg) VALUES (" & event.source.userid &"," & event.message.text")";
+//   con.query(sql, function (err, result) {
+//     if (err) throw err;
+//     console.log("1 record inserted");
+//   });
+// });
 
   if (event.message.type = 'text') {
     var msg = event.message.text;
