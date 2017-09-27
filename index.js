@@ -1,6 +1,6 @@
 var linebot = require('linebot');
 var express = require('express');
-var mysql = require('mysql');
+// var mysql = require('mysql');
 
 
 var bot = linebot({
@@ -10,11 +10,11 @@ var bot = linebot({
 
 });
 
-var con = mysql.createConnection({
-  host: "harrylinebot.ctwsjipjbutj.ap-southeast-1.rds.amazonaws.com",
-  user: "harryhowiefish",
-  password: "harryhowiefish"
-});
+// var con = mysql.createConnection({
+//   host: "harrylinebot.ctwsjipjbutj.ap-southeast-1.rds.amazonaws.com",
+//   user: "harryhowiefish",
+//   password: "harryhowiefish"
+// });
 
 
 bot.on('message', function(event) {
