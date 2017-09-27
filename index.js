@@ -1,5 +1,7 @@
 var linebot = require('linebot');
 var express = require('express');
+var mysql = require('mysql');
+
 
 var bot = linebot({
   channelId: "1537329241",
@@ -8,19 +10,36 @@ var bot = linebot({
 
 });
 
+var con = mysql.createConnection({
+  host: "harrylinebot.ctwsjipjbutj.ap-southeast-1.rds.amazonaws.com",
+  user: "harryhowiefish",
+  password: "harryhowiefish"
+});
+
+
 bot.on('message', function(event) {
 	console.log(event); //把收到訊息的 event 印出來看看
 
-  // if (event.message.type = 'text') {
-  //   var msg = event.message.text;
-  //   event.reply(msg).then(function(data) {
-  //     // success 
-  //     console.log(msg);
-  //   }).catch(function(error) {
-  //     // error 
-  //     console.log('error');
-  //   });
-  // }
+  con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "INSERT INTO msg_log (userid, msg) VALUES (" & event.source.userid &"," & event.message.text")";
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record inserted");
+  });
+});
+
+  if (event.message.type = 'text') {
+    var msg = event.message.text;
+    event.reply(msg).then(function(data) {
+      // success 
+      console.log(msg);
+    }).catch(function(error) {
+      // error 
+      console.log('error');
+    });
+  }
 });
 
 const app = express();
