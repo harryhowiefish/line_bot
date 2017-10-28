@@ -15,8 +15,8 @@ var usercheck = false;
 //連結linebot
 var bot = linebot({
   channelId: "1537329241",
-  channelSecret: "0d5a2abff7ff529589eb34a90e7a13f7",
-  channelAccessToken:"1ylgq6lfhGYdX4+dmx06VE6m7Ki/T1D4jC0PIu2NP8TOAf9fh+TkkJLrAo8B4AUCgiWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/gB3iR2BmfbFeAePehKDVhXooG90kzZzbcE8uaUiawrvAdB04t89/1O/w1cDnyilFU="
+  channelSecret: "f2fa2f19f62b0236c16cd977bf013648",
+  channelAccessToken:"yRdxnDImp5x5V8pYeEYMDapOGMG/Z2y039kFLPs7C5dzuHCvqlQ0kzBGh8gU9RA+giWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/iqVPZNwKE0Pm7QxfDZhIbLpa9Cyr7p8srLAmefShCisgdB04t89/1O/w1cDnyilFU="
 
 });
 //連結sql
