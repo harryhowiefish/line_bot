@@ -88,10 +88,10 @@ bot.on('message', function(event) {
     // }
   // }
 
-    console.log("收到訊息");
-    console.log(start);
+    // console.log("收到訊息");
+    // console.log(start);
   if(start === 1){
-    console.log("問卷中");
+    // console.log("問卷中");
 
     if(message >=1 && message <=10 && type==="scale"){
         var sql = "INSERT INTO msg_log (userid, question_id, msg) VALUES ('"+userid +"',"+ i+",'"+message+"')";
