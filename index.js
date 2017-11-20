@@ -42,7 +42,6 @@ con.connect(function(err) {
 
 
 bot.on('message', function(event) {
-<<<<<<< HEAD
 	console.log("收到訊息");
 	var userid = event.source.userId;
 	var message = event.message.text;
