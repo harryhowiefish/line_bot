@@ -2,102 +2,175 @@ var linebot = require('linebot');
 var express = require('express');
 var mysql = require('mysql');
 const line = require('@line/bot-sdk');
+var schedule = require('node-schedule');
 var i=0;
+var start=0;
 var content;
 var type;
-
-
+var qresult_id;
+var channelAccessTokenvalue = "yRdxnDImp5x5V8pYeEYMDapOGMG/Z2y039kFLPs7C5dzuHCvqlQ0kzBGh8gU9RA+giWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/iqVPZNwKE0Pm7QxfDZhIbLpa9Cyr7p8srLAmefShCisgdB04t89/1O/w1cDnyilFU="
+var recorded;
+var updated;
+//-------------------------------------------------------------------------
+//連結linebot
 var bot = linebot({
-  channelId: "1537329241",
-  channelSecret: "86f3c18a761c703d93bdfd4c626eb305",
-  channelAccessToken:"1ylgq6lfhGYdX4+dmx06VE6m7Ki/T1D4jC0PIu2NP8TOAf9fh+TkkJLrAo8B4AUCgiWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/gB3iR2BmfbFeAePehKDVhXooG90kzZzbcE8uaUiawrvAdB04t89/1O/w1cDnyilFU="
+	channelId: "1537329241",
+	channelSecret: "f2fa2f19f62b0236c16cd977bf013648",
+	channelAccessToken: channelAccessTokenvalue
 
 });
-
+//連結sql
 var con = mysql.createConnection({
-  host: "harrylinebot.ctwsjipjbutj.ap-southeast-1.rds.amazonaws.com",
-  user: "harryhowiefish",
-  password: "harryhowiefish",
-  database: "linebot_sample"
+	host: "harrylinebot.ctwsjipjbutj.ap-southeast-1.rds.amazonaws.com",
+	user: "harryhowiefish",
+	password: "harryhowiefish",
+	database: "linebot_sample"
 
 });
 
 const client = new line.Client({
-  channelAccessToken:"1ylgq6lfhGYdX4+dmx06VE6m7Ki/T1D4jC0PIu2NP8TOAf9fh+TkkJLrAo8B4AUCgiWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/gB3iR2BmfbFeAePehKDVhXooG90kzZzbcE8uaUiawrvAdB04t89/1O/w1cDnyilFU="
+	channelAccessToken:channelAccessTokenvalue
 });
 
 con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
+	if (err) throw err;
+	console.log("Connected!");
 });
+
+//-------------------------------------------------------------------------
+
 
 bot.on('message', function(event) {
+	console.log("收到訊息");
+	var userid = event.source.userId;
+	var message = event.message.text;
+
+	// simple check
+	// client.pushMessage(userid,{type: 'text',text: '收到'});
+  	con.query("SELECT * FROM `user` WHERE `userid` = '"+userid+"'", function (err, result) {
+  		if (err) throw err;
+  		if(result.length!=0){
+  			start = result[0].flag;
+  			i = result[0].question_num;
+  			console.log(userid+":"+i);
+  			updated=true;
+  			record();
+  		}
+
+  	})
+
+  	var checkid ="SELECT *  FROM `user` WHERE `userid` = '" + userid +"'"
+  	con.query(checkid, function (err, result) {
+  		if (err) throw err;
+  		if(result.length === 0){
+  			var sql = "INSERT INTO user (userid) VALUES ('"+userid +"')";
+       		con.query(sql, function (err, result) {
+       			if (err) throw err;
+       			console.log("1 record inserted");
+       		});
+       		client.pushMessage(userid,{type: 'text',text: '很高興認識你'});
+   		};
+	});
 
 
-	// console.log(event); //把收到訊息的 event 印出來看看
-  var userid = event.source.userId;
-  var message = event.message.text;
+  	if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="開始問卷"){
+  		console.log('start');
+  		var alluser ="SELECT *  FROM `user`";
+  		con.query(alluser, function (err, result) {
+  			if (err) throw err;
+  			con.query("SELECT `content`,`type`  FROM `question` WHERE id = 1", function (err, result2) {
+
+		  		var j=result.length;
+	  			for (k=0; k<j; k++){
+	  				userid = result[k].userid;
+			   		con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;})
+		    		con.query("INSERT INTO question_result (userid) VALUES ('"+userid +"')", function (err, result) {if (err) throw err;})
+		    		client.pushMessage(result[k].userid,{type: 'text',text: "你可以開始問卷了"});
+			   		start=1;
+			   		i=1;
+			   		content = result2[0].content;
+	  				type = result2[0].type;
+		  			client.pushMessage(userid,{type: 'text',text: content});
+				};
+
+	  		});
+  		});
+  	};
+
+function record(){
+		if(updated){
+			if(start === 1){
+	  			console.log("接收答案");
+			  	if(message >=1 && message <=10 && type==="scale"){
+			  		con.query("INSERT INTO msg_log (userid, question_id, msg) VALUES ('"+userid +"',"+ i+",'"+message+"')", function (err, result) {if (err) throw err;});
+					con.query("SELECT max(id) as id  from `question_result` where userid='"+userid+"'",function(err,result){
+						if (err) throw err;
+						qresult_id=result[0].id;
+						con.query("UPDATE `question_result` SET `Q_"+i+"`="+message+" WHERE `id` ='"+qresult_id+"'", function (err, result) {
+							if (err) throw err;
+							recorded=true;
+						});
+						next_q();
+					});
+			  	}
+			  	else{
+			  		client.pushMessage(userid,{type: 'text',text: "資料錯誤，請重新填寫"});
+	  			};
+	  		}
+	  		else{
+    			client.pushMessage(userid,{type: 'text',text: "現在還不能填問卷喔"});
+	  		};
+	  	};
+	};
+	function ask(){
+		if(updated){
+  			con.query("SELECT * FROM `user` WHERE `userid` = '"+userid+"'", function (err, result) {
+	  				if (err) throw err;
+	  					i = result[0].question_num;
+		  				if (i <=10 && i>=1){
+		  					con.query("SELECT `content`,`type`  FROM `question` WHERE id = "+i, function (err, result) {
+		  						if (err) throw err;
+		  						content = result[0].content;
+		  						type = result[0].type;
+				  				client.pushMessage(userid,{type: 'text',text: content});
+				  			})
+				  		}
+				  		if(i ===11){
+				  			client.pushMessage(userid,{type: 'text',text: "問卷完成囉"});
+					   		con.query("UPDATE `user` SET `flag`=0, `question_num`=0 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;})
+						}
+	
+			});
+			updated=false;
+
+  		}
+  	};
 
 
+  	function next_q(){
+  		if(recorded=true){
+  			i++;
+  			recorded=false;
+  			con.query("UPDATE `user` SET `flag`=1, `question_num`="+i+" WHERE `userid` = '"+userid+"'", function (err, result) {if (err) throw err;});
 
+  		}
+  		ask();
 
-  if(i===0){
-    if (event.message.text === '開始問卷') {
-      i = 1;
-      console.log(i);
-    }
-    else {
-      client.pushMessage(event.source.userId,{type: 'text',text: '請輸入「開始問卷」喔'});
-    }
-  }
+  	}
+	
 
-    if(event.message.text >=1 && event.message.text <=10 && type==="scale"){
-      var sql = "INSERT INTO msg_log (userid, question_id, msg) VALUES ('"+userid +"',"+ i+",'"+message+"')";
-      console.log(sql);
-      con.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("1 record inserted");
-   
-      });
-      i++;
-      // console.log(i);
-    }
-
-
-    if(event.message.text !="" &&  type==="text"){
-
-      var sql = "INSERT INTO msg_log (userid, question_id, msg) VALUES ('"+userid +"',"+ i+",'"+message+"')";
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
-      i++;
-      // console.log(i);
-    }    
-
-  if (i <=10 && i>=1){
-    con.query("SELECT `content`,`type`  FROM `question` WHERE id = "+i, function (err, result) {
-      if (err) throw err;
-      content = result[0].content;
-      type = result[0].type;
-      console.log(content);
-      console.log(type);
-      client.pushMessage(event.source.userId,{type: 'text',text: content});
-
-    })
-  };
-
-
-  if(i>10){
-    client.pushMessage(event.source.userId,{type: 'text',text: '問卷完成囉！'});
-    i=0;
-  }
-  
 });
 
 
 
 
+
+
+
+
+
+
+//-----------------basic setup---------------------
 
 const app = express();
 const linebotParser = bot.parser();
@@ -105,6 +178,7 @@ app.post('/', linebotParser);
 
 //因為 express 預設走 port 3000，而 heroku 上預設卻不是，要透過下列程式轉換
 var server = app.listen(process.env.PORT || 8080, function() {
-  var port = server.address().port;
-  console.log("App now running on port", port);
+	var port = server.address().port;
+	console.log("App now running on port", port);
 });
+
