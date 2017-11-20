@@ -159,7 +159,6 @@ function record(){
 
   	}
 	
-=======
 	// console.log(event); //把收到訊息的 event 印出來看看
   var userid = event.source.userId;
   var message = event.message.text;
