@@ -7,9 +7,8 @@ var i=0;
 var start=0;
 var content;
 var type;
-<<<<<<< HEAD
 var qresult_id;
-var channelAccessTokenvalue = "yRdxnDImp5x5V8pYeEYMDapOGMG/Z2y039kFLPs7C5dzuHCvqlQ0kzBGh8gU9RA+giWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/iqVPZNwKE0Pm7QxfDZhIbLpa9Cyr7p8srLAmefShCisgdB04t89/1O/w1cDnyilFU="
+var channelAccessTokenvalue = "2VMlMDkyoFm35S+Zu936V5NUZTLReBHbwcvXfhIpP7rLtXnWgXY4bRAZbgrHtRZAgiWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/hh2lh6dGwCspfip/eU7b9CBg39Q9nETYLwN1VNmGRwvQdB04t89/1O/w1cDnyilFU="
 var recorded;
 var updated;
 //-------------------------------------------------------------------------
@@ -18,18 +17,7 @@ var bot = linebot({
 	channelId: "1537329241",
 	channelSecret: "f2fa2f19f62b0236c16cd977bf013648",
 	channelAccessToken: channelAccessTokenvalue
-=======
-var usercheck = false;
-// var responsecheck = false
 
-
-//-------------------------------------------------------------------------
-//連結linebot
-var bot = linebot({
-  channelId: "1537329241",
-  channelSecret: "f2fa2f19f62b0236c16cd977bf013648",
-  channelAccessToken:"yRdxnDImp5x5V8pYeEYMDapOGMG/Z2y039kFLPs7C5dzuHCvqlQ0kzBGh8gU9RA+giWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/iqVPZNwKE0Pm7QxfDZhIbLpa9Cyr7p8srLAmefShCisgdB04t89/1O/w1cDnyilFU="
->>>>>>> 3f7213073d2ec3aec71fa693f9adbd1e2721710f
 
 });
 //連結sql
