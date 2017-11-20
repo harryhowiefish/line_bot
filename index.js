@@ -295,7 +295,6 @@ function record(){
     if (err) throw err;
     start = result[0].flag;
   })
->>>>>>> 3f7213073d2ec3aec71fa693f9adbd1e2721710f
 
 });
 
@@ -308,10 +307,7 @@ function record(){
 
 
 
-<<<<<<< HEAD
 //-----------------basic setup---------------------
-=======
->>>>>>> 3f7213073d2ec3aec71fa693f9adbd1e2721710f
 
 const app = express();
 const linebotParser = bot.parser();
@@ -319,16 +315,6 @@ app.post('/', linebotParser);
 
 //因為 express 預設走 port 3000，而 heroku 上預設卻不是，要透過下列程式轉換
 var server = app.listen(process.env.PORT || 8080, function() {
-<<<<<<< HEAD
 	var port = server.address().port;
 	console.log("App now running on port", port);
 });
-
-=======
-  var port = server.address().port;
-  console.log("App now running on port", port);
-});
-
-
-
->>>>>>> 3f7213073d2ec3aec71fa693f9adbd1e2721710f
