@@ -43,6 +43,8 @@ con.connect(function(err) {
 
 bot.on('message', function(event) {
 	console.log("收到訊息");
+  var i=0;
+  var start=0;
 	var userid = event.source.userId;
 	var message = event.message.text;
 
@@ -116,6 +118,7 @@ function record(){
 			  	}
 			  	else{
 			  		client.pushMessage(userid,{type: 'text',text: "資料錯誤，請重新填寫"});
+
 	  			};
 	  		}
 	  		else{
