@@ -161,12 +161,10 @@ bot.on('message', function(event) {
   function next_q(){
 		if(recorded=true){
  		  i++;
-      console.log(i);
 		  recorded=false;
 		  con.query("UPDATE `user` SET `flag`=1, `question_num`="+i+" WHERE `userid` = '"+userid+"'", function (err, result) {if (err) throw err;});
   	}
   	ask();
-    console.log("this comes after i");
   };
 
   function start_questionaire(){
