@@ -39,6 +39,8 @@ var update_schedule_rule = new schedule.RecurrenceRule();
 update_schedule_rule.minute = [0,10,20,30,40,50,60];
 
 var timetable = [10,12,14,16,18,20,22];
+rule.hour = [10,12,14,16,18,20,22];
+rule.minute = 0;
 var start_schedule = 0;
 var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
   con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
@@ -48,6 +50,7 @@ var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
       timetable.push(result[k].hour);
     };
     rule.hour = timetable;
+    rule.minute = 0;
   });
 });
 
@@ -147,7 +150,7 @@ bot.on('message', function(event) {
 
     if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="停止排程"){
       start_schedule=0;
-      console.log('start_schedule');   
+      console.log('stop_schedule');   
     };  
 
 
