@@ -224,7 +224,7 @@ bot.on('message', function(event) {
   };
   function input_error(){
     client.pushMessage(userid,{type: 'text',text: "資料錯誤，請重新填寫"});
-    askagain();
+    setTimeout(askagain,500);
   };
   function next_q(){
     if(recorded=true){
@@ -237,12 +237,13 @@ bot.on('message', function(event) {
 
   function start_questionaire_2(){
     client.pushMessage(userid,{type: 'text',text: content});
-    console.log('push first question')
   };
 
   function start_questionaire_1(){
     client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
     start=1;
+    setTimeout(start_questionaire_2,500);
+
   };
   
 
