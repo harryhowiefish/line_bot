@@ -34,13 +34,21 @@ con.connect(function(err) {
 
 var rule = new schedule.RecurrenceRule();
 var start=0;
+var timetable = [];
+
 
 var update_schedule_rule = new schedule.RecurrenceRule();
 update_schedule_rule.minute = [0,10,20,30,40,50,60];
 
-var timetable = [10,12,14,16,18,20,22];
-rule.hour = [10,12,14,16,18,20,22];
-rule.minute = 0;
+con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
+  var j=result.length;
+    for (k=0; k<j; k++){
+      timetable.push(result[k].hour);
+    };
+    rule.hour = timetable;
+    console.log(timetable);
+  });
+
 var start_schedule = 0;
 var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
   con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
@@ -50,7 +58,7 @@ var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
       timetable.push(result[k].hour);
     };
     rule.hour = timetable;
-    rule.minute = 0;
+    console.log(timetable);
   });
 });
 
@@ -227,33 +235,39 @@ bot.on('message', function(event) {
     ask();
   };
 
+  function start_questionaire_2(){
+    client.pushMessage(userid,{type: 'text',text: content});
+  };
+
   function start_questionaire_1(){
     client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
     start=1;
-    start_questionaire_2();
+    setTimeout(start_questionaire_2,500);
   };
   
-  function start_questionaire_2(){
+
+
+  function follow_text(){
     client.pushMessage(userid,{type: 'text',text: content});
   };
   function pictureandtext(){
     client.pushMessage(userid,{type: "image",originalContentUrl: "https://i.imgur.com/nRzOPAP.png",previewImageUrl: "https://i.imgur.com/nRzOPAP.png"});
-    follow_text();
+    setTimeout(follow_text,500);
   };
-  function follow_text(){
+});  
+
+  
+  
+function start_prompt_2(){
     client.pushMessage(userid,{type: 'text',text: content});
-  };
-});
-  
-  
+};
+
 function start_prompt_1(){
   client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
   start=1;
-  start_prompt_2();
+  setTimeout(start_prompt_2,500);
 };
-function start_prompt_2(){
-  client.pushMessage(userid,{type: 'text',text: content});
-};
+
 
 
 //-----------------basic setup---------------------
