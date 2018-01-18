@@ -104,88 +104,88 @@ bot.on('message', function(event) {
   var max_num;
 
 
-    con.query("SELECT `userid`,`flag`,`question`.`id`,`content`, `max_num` FROM `user` left join `question`on `user`.`question_num`=`question`.`id`WHERE `userid` = '"+userid+"'", function (err, result) {
-      if (err) throw err;
-      if(result.length!=0){
-        start = result[0].flag;
-        i = result[0].id;
-        content = result[0].content;
-        max_num= result[0].max_num;
-        updated=true;
-        record();
-      }
+  con.query("SELECT `userid`,`flag`,`question`.`id`,`content`, `max_num` FROM `user` left join `question`on `user`.`question_num`=`question`.`id`WHERE `userid` = '"+userid+"'", function (err, result) {
+    if (err) throw err;
+    if(result.length!=0){
+      start = result[0].flag;
+      i = result[0].id;
+      content = result[0].content;
+      max_num= result[0].max_num;
+      updated=true;
+      record();
+    }
+  });
 
-    });
-
-    con.query("SELECT *  FROM `user` WHERE `userid` = '" + userid +"'", function (err, result) {
-      if (err) throw err;
-      if(result.length === 0){
-        var sql = "INSERT INTO user (userid) VALUES ('"+userid +"')";
-          con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("1 record inserted");
-          });
-          client.pushMessage(userid,{type: 'text',text: '很高興認識你'});
-      };
-    });
-
-
-    if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="手動開始"){
-      console.log('start');
-      var alluser ="SELECT * FROM `user`";
-      con.query(alluser, function (err, result) {
-        if (err) throw err;
-        con.query("SELECT `content`,`type`  FROM `question` WHERE id = 1", function (err, result2) {
-          var j=result.length;
-          for (k=0; k<j; k++){
-            userid=result[k].userid;
-            con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {
-              if (err) throw err;
-            });
-            con.query("INSERT INTO question_result (userid) VALUES ('"+userid +"')", function (err, result) {if (err) throw err;})
-            content = result2[0].content;
-            type = result2[0].type;
-            start_questionaire_1();
-          };
+  con.query("SELECT *  FROM `user` WHERE `userid` = '" + userid +"'", function (err, result) {
+    if (err) throw err;
+    if(result.length === 0){
+      var sql = "INSERT INTO user (userid) VALUES ('"+userid +"')";
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log("1 record inserted");
         });
-      });    
+        client.pushMessage(userid,{type: 'text',text: '很高興認識你'});
     };
-
-    if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="開始排程"){
-      start_schedule=1;
-      console.log('start_schedule');   
-    };    
-
-    if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="停止排程"){
-      start_schedule=0;
-      console.log('stop_schedule');   
-    };  
+  });
 
 
-    function record(){
-    if(updated){
-      if(start === 1){
-          if(message >=1 && message <=max_num ){
-            console.log("接收答案");
-            con.query("INSERT INTO msg_log (userid, question_id, msg) VALUES ('"+userid +"',"+ i+",'"+message+"')", function (err, result) {if (err) throw err;});
-            con.query("SELECT max(id) as id  from `question_result` where userid='"+userid+"'",function(err,result){
+  if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="手動開始"){
+    console.log('start');
+    var alluser ="SELECT * FROM `user`";
+    con.query(alluser, function (err, result) {
+      if (err) throw err;
+      con.query("SELECT `content`,`type`  FROM `question` WHERE id = 1", function (err, result2) {
+        var j=result.length;
+        for (k=0; k<j; k++){
+          userid=result[k].userid;
+          con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {
             if (err) throw err;
-            qresult_id=result[0].id;
-            con.query("UPDATE `question_result` SET `Q_"+i+"`="+message+" , `update_at` = CURRENT_TIMESTAMP WHERE `id` ='"+qresult_id+"'", function (err, result) {
-              if (err) throw err;
-              recorded=true;
-            });
-            next_q();
           });
-          }
-          else{
-            input_error();
-          };
+          con.query("INSERT INTO question_result (userid) VALUES ('"+userid +"')", function (err, result) {if (err) throw err;})
+          content = result2[0].content;
+          type = result2[0].type;
+          start_questionaire_1();
+
+        };
+      });
+    });    
+  };
+
+  if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="開始排程"){
+    start_schedule=1;
+    console.log('start_schedule');   
+  };    
+
+  if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="停止排程"){
+    start_schedule=0;
+    console.log('stop_schedule');   
+  };  
+
+
+  function record(){
+  if(updated){
+    if(start === 1){
+        if(message >=1 && message <=max_num ){
+          console.log("接收答案");
+          con.query("INSERT INTO msg_log (userid, question_id, msg) VALUES ('"+userid +"',"+ i+",'"+message+"')", function (err, result) {if (err) throw err;});
+          con.query("SELECT max(id) as id  from `question_result` where userid='"+userid+"'",function(err,result){
+          if (err) throw err;
+          qresult_id=result[0].id;
+          con.query("UPDATE `question_result` SET `Q_"+i+"`="+message+" , `update_at` = CURRENT_TIMESTAMP WHERE `id` ='"+qresult_id+"'", function (err, result) {
+            if (err) throw err;
+            recorded=true;
+          });
+          next_q();
+        });
         }
         else{
-          client.pushMessage(userid,{type: 'text',text: "現在還不能填問卷喔"});
+          input_error();
         };
+      }
+      else{
+        client.pushMessage(userid,{type: 'text',text: "現在還不能填問卷喔"});
       };
+    };
   };
 
   function ask(){
@@ -237,12 +237,12 @@ bot.on('message', function(event) {
 
   function start_questionaire_2(){
     client.pushMessage(userid,{type: 'text',text: content});
+    console.log('push first question')
   };
 
   function start_questionaire_1(){
     client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
     start=1;
-    setTimeout(start_questionaire_2,500);
   };
   
 
