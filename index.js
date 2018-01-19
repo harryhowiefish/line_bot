@@ -9,7 +9,7 @@ var channelAccessTokenvalue = "2VMlMDkyoFm35S+Zu936V5NUZTLReBHbwcvXfhIpP7rLtXnWg
 //連結linebot
 var bot = linebot({
   channelId: "1537329241",
-  channelSecret: "f2fa2f19f62b0236c16cd977bf013648",
+  channelSecret: "291f1613b1cd07d9c036453fe7466218",
   channelAccessToken: channelAccessTokenvalue
 
 
@@ -46,7 +46,7 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
       timetable.push(result[k].hour);
     };
     rule.hour = timetable;
-    // rule.minute = 0;
+    rule.minute = 0;
 
     console.log(timetable);
   });
@@ -59,9 +59,9 @@ var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
     for (k=0; k<j; k++){
       timetable.push(result[k].hour);
     };
-    // rule.hour = timetable;
-    // console.log(timetable);
-    // console.log(start_schedule);
+    rule.hour = timetable;
+    console.log(timetable);
+    console.log(start_schedule);
   });
 });
 
@@ -106,7 +106,6 @@ bot.on('message', function(event) {
   var message = event.message.text;
   var launch = 0;
   var max_num;
-
 
   con.query("SELECT `userid`,`flag`,`question`.`id`,`content`, `max_num` FROM `user` left join `question`on `user`.`question_num`=`question`.`id`WHERE `userid` = '"+userid+"'", function (err, result) {
     if (err) throw err;
@@ -158,13 +157,12 @@ bot.on('message', function(event) {
   if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="開始排程"){
     start_schedule=true;
     console.log(start_schedule);   
-  };    
+  };
 
   if (userid==="U05a02f4a949c84fd19afebe7483a2e84" && message==="停止排程"){
     start_schedule=false;
-    console.log(stop_schedule);   
-  };  
-
+    console.log(stop_schedule);
+  };   
 
   function record(){
   if(updated){
@@ -192,6 +190,8 @@ bot.on('message', function(event) {
     };
   };
 
+// });
+
   function ask(){
     if(updated){
       if (i <=8 && i>=1){
@@ -216,6 +216,7 @@ bot.on('message', function(event) {
     };
       updated=false;
   };
+
 
   function askagain(){
     if (i <=10 && i>=1){
@@ -247,7 +248,6 @@ bot.on('message', function(event) {
     client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
     start=1;
     setTimeout(start_questionaire_2,500);
-
   };
   
 
@@ -259,7 +259,7 @@ bot.on('message', function(event) {
     client.pushMessage(userid,{type: "image",originalContentUrl: "https://i.imgur.com/nRzOPAP.png",previewImageUrl: "https://i.imgur.com/nRzOPAP.png"});
     setTimeout(follow_text,500);
   };
-});  
+});
 
   
   
