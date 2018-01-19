@@ -45,7 +45,9 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
     for (k=0; k<j; k++){
       timetable.push(result[k].hour);
     };
-    rule.minute = timetable;
+    rule.hour = timetable;
+    rule.minute = 0;
+
     console.log(timetable);
   });
 
@@ -57,14 +59,16 @@ var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
     for (k=0; k<j; k++){
       timetable.push(result[k].hour);
     };
-    rule.minute = timetable;
+    rule.hour = timetable;
     console.log(timetable);
+    console.log(start_schedule);
   });
 });
 
 
 //-------------------------------------------------------------------------
 var trigger = schedule.scheduleJob(rule, function(){
+  console.log('trigger');
   if(start_schedule){
     console.log('start');
     var alluser ="SELECT * FROM `user`";
