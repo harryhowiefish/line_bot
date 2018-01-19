@@ -46,7 +46,7 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
       timetable.push(result[k].hour);
     };
     rule.hour = timetable;
-    rule.minute = 0;
+    // rule.minute = 0;
 
     console.log(timetable);
   });
@@ -59,9 +59,9 @@ var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
     for (k=0; k<j; k++){
       timetable.push(result[k].hour);
     };
-    rule.hour = timetable;
-    console.log(timetable);
-    console.log(start_schedule);
+    // rule.hour = timetable;
+    // console.log(timetable);
+    // console.log(start_schedule);
   });
 });
 
