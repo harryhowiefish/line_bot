@@ -325,7 +325,7 @@ bot.on('message', function(event) {
   };
 
   function pictureandtext(){
-    client.pushMessage(userid,{type: "image",originalContentUrl: "https://i.imgur.com/nRzOPAP.png",previewImageUrl: "https://i.imgur.com/nRzOPAP.png"});
+    client.pushMessage(userid,{type: "image",originalContentUrl: "https://i.imgur.com/QJVSN6I.png",previewImageUrl: "https://i.imgur.com/nRzOPAP.png"});
     setTimeout(follow_text,500);
   };
 
