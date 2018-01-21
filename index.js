@@ -36,8 +36,8 @@ con.connect(function(err) {
 
 var rule = new schedule.RecurrenceRule();
 var start=0;
-var timetable= [10];
-rule.minute = 25;  
+var timetable= [];
+rule.minute = 0;  
 
 
 var update_schedule_rule = new schedule.RecurrenceRule();
