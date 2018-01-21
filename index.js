@@ -36,21 +36,20 @@ con.connect(function(err) {
 
 var rule = new schedule.RecurrenceRule();
 var start=0;
-var timetable= [];
+var timetable= [10];
 
 var update_schedule_rule = new schedule.RecurrenceRule();
 update_schedule_rule.second = [30];
 
 con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
   var j=result.length;
-    for (k=0; k<j; k++){
-      timetable.push(result[k].hour);
-    };
-    rule.hour = timetable;
-    rule.minute = 0;
-
-    console.log(timetable);
-  });
+  timetable = [];
+  for (k=0; k<j; k++){
+    timetable.push(result[k].hour);
+  };
+  rule.hour = timetable;
+  rule.minute = 0;  console.log(timetable);
+});
 
 var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
   con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
@@ -129,6 +128,7 @@ bot.on('message', function(event) {
       if(Number.isInteger(group)){
         start_questionaire_1();
         start_questionaire_2();
+        client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
     else if(admin==1 && message.includes("開始排程")){
@@ -147,6 +147,7 @@ bot.on('message', function(event) {
             });
           };
         });
+        client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
     else if(admin==1 && message.includes("停止排程")){
@@ -165,6 +166,7 @@ bot.on('message', function(event) {
             });
           };
         });
+        client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };  
     }
     else if(admin==1 && message.includes("結算")){
@@ -179,6 +181,7 @@ bot.on('message', function(event) {
             client.pushMessage(userid,{type: 'text',text: '您的問卷完成率為：'+rate+'%'});
           };
         });
+        client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
     else{
