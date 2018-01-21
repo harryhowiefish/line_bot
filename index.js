@@ -186,9 +186,9 @@ bot.on('message', function(event) {
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
-    else{
-      client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
-    };    
+    // else{
+    //   client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
+    // };    
   });
 
 //-------------------------------------------------------------------------
