@@ -112,14 +112,16 @@ bot.on('message', function(event) {
       console.log('管理員判斷：'+ admin);
     };
 
-   
+    client.getProfile(userid).then((profile) =>{
+      nickname = profile.displayName;
+      console.log(nickname);
+    });   
   
     con.query("SELECT *  FROM `user` WHERE `userid` = '" + userid +"'", function (err, result) {
       if (err) throw err;
       client.getProfile(userid).then((profile) =>{
         nickname = profile.displayName;
         console.log(nickname);
-      });
       if(result.length === 0){
         console.log("INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + nickname +"')");
         var sql = "INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + nickname +"')";
@@ -129,6 +131,7 @@ bot.on('message', function(event) {
           });
           client.pushMessage(userid,{type: 'text',text: '很高興認識你'});
       };
+      });
     });
   
     if (admin==1 && message.includes("手動開始")){
