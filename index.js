@@ -37,6 +37,8 @@ con.connect(function(err) {
 var rule = new schedule.RecurrenceRule();
 var start=0;
 var timetable= [10];
+rule.minute = 25;  
+
 
 var update_schedule_rule = new schedule.RecurrenceRule();
 update_schedule_rule.second = [30];
@@ -48,7 +50,6 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
     timetable.push(result[k].hour);
   };
   rule.hour = timetable;
-  rule.minute = 10;  
   console.log(timetable);
 });
 
