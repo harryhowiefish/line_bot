@@ -290,11 +290,6 @@ bot.on('message', function(event) {
       var j=result.length;    
       for (var k=0;k<j;k++){
         userid=result[k].userid;
-        console.log(userid);
-        console.log(k);
-        content=result[0].content;
-        con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
-        con.query("INSERT INTO question_result (userid) VALUES ('"+userid +"')", function (err, result) {if (err) throw err;});
         console.log('發問題');
         console.log('send to:'+userid);
         client.pushMessage(userid,{type: 'text',text: content});
@@ -309,10 +304,10 @@ bot.on('message', function(event) {
       var j=result.length;    
       for (var k=0;k<j;k++){
         userid=result[k].userid;
-        console.log(userid);
-        console.log(k);
         console.log('發訊息');
         console.log('send to:'+userid);
+        con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
+        con.query("INSERT INTO question_result (userid) VALUES ('"+userid +"')", function (err, result) {if (err) throw err;});
         client.pushMessage(userid,{type: 'text',text: "你可以開始填寫問卷了"});
       };
     });
