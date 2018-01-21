@@ -118,11 +118,11 @@ bot.on('message', function(event) {
       if (err) throw err;
       client.getProfile(userid).then((profile) =>{
         nickname = profile.displayName;
-        console.log(name);
+        console.log(nickname);
       });
       if(result.length === 0){
-        console.log("INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + name +"')");
-        var sql = "INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + name +"')";
+        console.log("INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + nickname +"')");
+        var sql = "INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + nickname +"')";
           con.query(sql, function (err, result) {
             if (err) throw err;
             console.log("1 record inserted");
