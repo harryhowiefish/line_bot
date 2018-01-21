@@ -64,6 +64,8 @@ var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
     };
     rule.hour = timetable;
     console.log(timetable);
+    var n = new Date();
+    console.log(n.getHours()+":"+n.getMinutes());
   });
 });
 
