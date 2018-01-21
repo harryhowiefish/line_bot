@@ -37,7 +37,7 @@ con.connect(function(err) {
 var rule = new schedule.RecurrenceRule();
 var start=0;
 var timetable= [];
-rule.minute = 0;  
+rule.minute = [0];  
 
 
 var update_schedule_rule = new schedule.RecurrenceRule();
@@ -72,8 +72,8 @@ var trigger = schedule.scheduleJob(rule, function(){
   console.log('start');
   var n = new Date();
   console.log(n.getHours()+":"+n.getMinutes());
-  setTimeout(start_prompt_1,500);
-  start_prompt_2();
+  start_prompt_1();
+  setTimeout(start_prompt_2,500);
 });
 
 
@@ -110,6 +110,7 @@ bot.on('message', function(event) {
 
     client.getProfile(userid).then((profile) =>{
       name = profile.displayName;
+      console.log(name);
     });
   
     con.query("SELECT *  FROM `user` WHERE `userid` = '" + userid +"'", function (err, result) {
