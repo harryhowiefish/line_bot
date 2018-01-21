@@ -95,7 +95,7 @@ bot.on('message', function(event) {
   var message = event.message.text;
   var launch = 0;
   var max_num;
-  var name;
+  var nickname;
   var admin;
   var group;
   var first_content;
@@ -112,13 +112,14 @@ bot.on('message', function(event) {
       console.log('管理員判斷：'+ admin);
     };
 
-    client.getProfile(userid).then((profile) =>{
-      name = profile.displayName;
-      console.log(name);
-    });
+   
   
     con.query("SELECT *  FROM `user` WHERE `userid` = '" + userid +"'", function (err, result) {
       if (err) throw err;
+      client.getProfile(userid).then((profile) =>{
+        nickname = profile.displayName;
+        console.log(name);
+      });
       if(result.length === 0){
         console.log("INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + name +"')");
         var sql = "INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + name +"')";
