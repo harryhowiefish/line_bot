@@ -130,13 +130,8 @@ bot.on('message', function(event) {
         start_questionaire_1();
         start_questionaire_2();
       };
-    }  
-    else{
-      client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
-    };    
-    
-  
-    if (admin==1 && message.includes("開始排程")){
+    }
+    else if(admin==1 && message.includes("開始排程")){
       console.log('start schedule');
       group = Number(message.substr(1,1));
       if(Number.isInteger(group)){
@@ -152,13 +147,9 @@ bot.on('message', function(event) {
             });
           };
         });
-      }
-      else{
-        client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
-      };       
-    };
-
-    if (admin==1 && message.includes("停止排程")){
+      };
+    }
+    else if(admin==1 && message.includes("停止排程")){
       console.log('stop schedule');
       group = Number(message.substr(1,1));
       if(Number.isInteger(group)){
@@ -174,13 +165,9 @@ bot.on('message', function(event) {
             });
           };
         });
-      }
-      else{
-        client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
-      };       
-    };
-
-    if (admin==1 && message.includes("結算")){
+      };  
+    }
+    else if(admin==1 && message.includes("結算")){
       console.log('calculate result');
       group = Number(message.substr(1,1));
       if(Number.isInteger(group)){
@@ -193,7 +180,10 @@ bot.on('message', function(event) {
           };
         });
       };
-    };  
+    }
+    else{
+      client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
+    };    
   });
 
 //-------------------------------------------------------------------------
