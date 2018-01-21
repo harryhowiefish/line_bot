@@ -72,7 +72,7 @@ var trigger = schedule.scheduleJob(rule, function(){
   console.log('start');
   var n = new Date();
   console.log(n.getHours()+":"+n.getMinutes());
-  start_prompt_1();
+  setTimeout(start_prompt_1,500);
   start_prompt_2();
 });
 
@@ -129,7 +129,7 @@ bot.on('message', function(event) {
       group = Number(message.substr(1,1));
       if(Number.isInteger(group)){
         start_questionaire_1();
-        start_questionaire_2();
+        setTimeout(start_questionaire_2,500);
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
