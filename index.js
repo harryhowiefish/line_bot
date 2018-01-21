@@ -120,7 +120,8 @@ bot.on('message', function(event) {
     con.query("SELECT *  FROM `user` WHERE `userid` = '" + userid +"'", function (err, result) {
       if (err) throw err;
       if(result.length === 0){
-        var sql = "INSERT INTO user (userid,name) VALUES ('"+userid + "','" + name +"')";
+        console.log("INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + name +"')");
+        var sql = "INSERT INTO `user` (`userid`,`name`) VALUES ('"+userid + "','" + name +"')";
           con.query(sql, function (err, result) {
             if (err) throw err;
             console.log("1 record inserted");
