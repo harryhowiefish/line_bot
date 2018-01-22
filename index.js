@@ -310,12 +310,10 @@ bot.on('message', function(event) {
         userid=result[k].userid;
         db_id=result[k].id;
         nickname=result[k].name;
-        console.log(result[k]);
         console.log('發訊息');
         console.log('send to:'+userid);
         con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
         con.query("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')", function (err, result) {if (err) throw err;});
-        console.log("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')");
         client.pushMessage(userid,{type: 'text',text: "你可以開始填寫問卷了"});
       };
     });
@@ -364,7 +362,6 @@ function start_prompt_1(){
       userid=result[k].userid;
       db_id=result[k].id;
       nickname=result[k].name;
-      console.log(result);
       con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {
         if (err) throw err;
       });
