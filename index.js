@@ -37,7 +37,7 @@ con.connect(function(err) {
 var rule = new schedule.RecurrenceRule();
 var start=0;
 var timetable= [];
-rule.minute = [0];  
+rule.minute = [0];;  
 
 
 var update_schedule_rule = new schedule.RecurrenceRule();
@@ -47,7 +47,7 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
   var j=result.length;
   timetable = [];
   for (k=0; k<j; k++){
-    timetable.push(result[k].hour);
+    timetable.push(Number(result[k].hour));
   };
   rule.hour = timetable;
   console.log(timetable);
@@ -55,7 +55,18 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
   console.log(n.getHours()+":"+n.getMinutes());
 });
 
-var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
+
+var trigger = schedule.scheduleJob(rule, function(){
+  console.log('trigger');
+  console.log('start');
+  var n = new Date();
+  console.log(n.getHours()+":"+n.getMinutes());
+  start_prompt_1();
+  setTimeout(start_prompt_2,500);
+});
+
+
+var update_schedule = schedule.scheduleJob('*/1 * * * *',function(){
   con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
     var j=result.length;
     timetable = [];
@@ -64,20 +75,10 @@ var update_schedule = schedule.scheduleJob(update_schedule_rule,function(){
     };
     rule.hour = timetable;
     console.log(timetable);
+    trigger.reschedule(rule);
     var n = new Date();
     console.log(n.getHours()+":"+n.getMinutes());
   });
-});
-
-
-//-------------------------------------------------------------------------
-var trigger = schedule.scheduleJob(rule, function(){
-  console.log('trigger');
-  console.log('start');
-  var n = new Date();
-  console.log(n.getHours()+":"+n.getMinutes());
-  start_prompt_1();
-  setTimeout(start_prompt_2,500);
 });
 
 
@@ -98,7 +99,7 @@ bot.on('message', function(event) {
   var nickname;
   var admin;
   var group;
-  var first_content;
+  var db_id;
   con.query("SELECT `userid`,`flag`,`is_admin`,`question`.`id`,`content`, `min_num`, `max_num` FROM `user` left join `question`on `user`.`question_num`=`question`.`id`WHERE `userid` = '"+userid+"'", function (err, result) {
     if (err) throw err;
     if(result.length!=0){
@@ -185,12 +186,15 @@ bot.on('message', function(event) {
       console.log('calculate result');
       group = Number(message.substr(1,1));
       if(Number.isInteger(group)){
-        con.query("select `question_result`.`userid`,`group`, count(`question_result`.`userid`), sum(`status`), sum(`status`)/count(`question_result`.`userid`)*100 as rate from `question_result` left join `user` on `user`.`userid` = `question_result`.`userid` group by `userid`", function (err, result) {
+        con.query("select `question_result`.`userid`,`group`, count(`question_result`.`userid`), sum(`status`), sum(`status`)/count(`question_result`.`userid`)*100 as rate from `question_result` left join `user` on `user`.`userid` = `question_result`.`userid` where `group`="+group + " group by `userid`", function (err, result) {
           var j=result.length;
           for (k=0; k<j; k++){
             userid=result[k].userid;
-            var rate = result[k].rate;
+            var rate = Math.round(result[k].rate);
             client.pushMessage(userid,{type: 'text',text: '您的問卷完成率為：'+rate+'%'});
+            console.log(rate);
+            con.query("UPDATE `user` SET `finish_percentage` = "+rate +" where `userid` = '"+userid+"'", function (err, result) {});
+            console.log("UPDATE `user` SET `finish_percentage` = "+rate +" where `userid` = '"+userid+"'");
           };
         });
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
@@ -304,10 +308,12 @@ bot.on('message', function(event) {
       var j=result.length;    
       for (var k=0;k<j;k++){
         userid=result[k].userid;
+        db_id=result[k].id;
+        nickname=result[k].name;
         console.log('發訊息');
         console.log('send to:'+userid);
         con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
-        con.query("INSERT INTO question_result (userid) VALUES ('"+userid +"')", function (err, result) {if (err) throw err;});
+        con.query("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')", function (err, result) {if (err) throw err;});
         client.pushMessage(userid,{type: 'text',text: "你可以開始填寫問卷了"});
       };
     });
@@ -354,10 +360,12 @@ function start_prompt_1(){
     var j=result.length;
     for (k=0; k<j; k++){
       userid=result[k].userid;
+      db_id=result[k].id;
+      nickname=result[k].name;
       con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {
         if (err) throw err;
       });
-      con.query("INSERT INTO question_result (userid) VALUES ('"+userid +"')", function (err, result) {if (err) throw err;})
+      con.query("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')", function (err, result) {if (err) throw err;});
       client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
       console.log('發訊息');
       console.log('send to:'+userid);
