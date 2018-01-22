@@ -302,7 +302,7 @@ bot.on('message', function(event) {
   };
 
   function start_questionaire_1(){
-    var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `group` = "+group;
+    var alluser ="SELECT * FROM `user` where `group` = "+group;
     con.query(alluser, function (err, result) {
       if (err) throw err;    
       var j=result.length;    
@@ -354,7 +354,7 @@ function start_prompt_2(){
 };
 
 function start_prompt_1(){
-  var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `schedule` = 1";
+  var alluser ="SELECT * FROM `user` where `schedule` = 1";
   con.query(alluser, function (err, result) {
     if (err) throw err;
     var j=result.length;
