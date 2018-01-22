@@ -315,6 +315,7 @@ bot.on('message', function(event) {
         console.log('send to:'+userid);
         con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
         con.query("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')", function (err, result) {if (err) throw err;});
+        console.log("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')");
         client.pushMessage(userid,{type: 'text',text: "你可以開始填寫問卷了"});
       };
     });
