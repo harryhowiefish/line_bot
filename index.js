@@ -310,6 +310,7 @@ bot.on('message', function(event) {
         userid=result[k].userid;
         db_id=result[k].id;
         nickname=result[k].name;
+        console.log(result);
         console.log('發訊息');
         console.log('send to:'+userid);
         con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
