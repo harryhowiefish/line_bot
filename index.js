@@ -65,6 +65,23 @@ var trigger = schedule.scheduleJob(rule, function(){
   setTimeout(start_prompt_2,500);
 });
 
+var next_day_rule = new schedule.RecurrenceRule();
+next_day_rule.hour = [0]
+next_day_rule.minute = [0]
+
+var next_day = schedule.scheduleJob(next_day_rule, function(){
+  var allactiveuser ="SELECT * FROM `user` where `flag` = "+1;
+    con.query(allactiveuser, function (err, result) {
+      if (err) throw err;    
+      var j=result.length;
+      for (var k=0;k<j;k++){
+        userid=result[k].userid;
+        console.log('前一天問卷填寫截止');
+        con.query("UPDATE `user` SET `flag`=0 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
+      };
+    });
+});
+
 
 var update_schedule = schedule.scheduleJob('*/1 * * * *',function(){
   con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
@@ -290,7 +307,8 @@ bot.on('message', function(event) {
   function start_questionaire_2(){
     var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `group` = "+group;
     con.query(alluser, function (err, result) {
-      if (err) throw err;    
+      if (err) throw err;
+      console.log(result);    
       var j=result.length;    
       for (var k=0;k<j;k++){
         userid=result[k].userid;
@@ -305,7 +323,7 @@ bot.on('message', function(event) {
     var alluser ="SELECT * FROM `user` where `group` = "+group;
     con.query(alluser, function (err, result) {
       if (err) throw err;    
-      var j=result.length;    
+      var j=result.length;
       for (var k=0;k<j;k++){
         userid=result[k].userid;
         db_id=result[k].id;
