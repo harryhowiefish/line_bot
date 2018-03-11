@@ -62,7 +62,7 @@ var trigger = schedule.scheduleJob(rule, function(){
   var n = new Date();
   console.log(n.getHours()+":"+n.getMinutes());
   start_prompt_1();
-  setTimeout(start_prompt_2,500);
+  start_prompt_2();
 });
 
 var next_day_rule = new schedule.RecurrenceRule();
@@ -157,7 +157,7 @@ bot.on('message', function(event) {
       group = Number(message.substr(1,1));
       if(Number.isInteger(group)){
         start_questionaire_1();
-        setTimeout(start_questionaire_2,500);
+        start_questionaire_2();
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
@@ -217,9 +217,9 @@ bot.on('message', function(event) {
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
-    // else{
-    //   client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
-    // };    
+    else{
+      client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
+    };    
   });
 
 //-------------------------------------------------------------------------
