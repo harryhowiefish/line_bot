@@ -61,8 +61,18 @@ var trigger = schedule.scheduleJob(rule, function(){
   console.log('start');
   var n = new Date();
   console.log(n.getHours()+":"+n.getMinutes());
-  start_prompt_1();
-  start_prompt_2();
+
+  var alluser ="SELECT * FROM `user` where `schedule` = 1";
+  con.query(alluser, function (err, result) {
+    if (err) throw err;
+    start_prompt_1(result);
+  })
+
+  var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `schedule` = 1";
+  con.query(alluser, function (err, result) {
+    if (err) throw err;
+    start_prompt_2(result);
+  })
 });
 
 var next_day_rule = new schedule.RecurrenceRule();
@@ -156,8 +166,19 @@ bot.on('message', function(event) {
       console.log('manuel triggered');
       group = Number(message.substr(1,1));
       if(Number.isInteger(group)){
-        start_questionaire_1();
-        start_questionaire_2();
+        
+        var alluser ="SELECT * FROM `user` where `group` = "+group;
+        con.query(alluser, function (err, result1) {
+          if (err) throw err;   
+          start_questionaire_1(result1);
+        });
+ 
+        var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `group` = "+group;
+        con.query(alluser, function (err, result2) {
+          if (err) throw err;
+          start_questionaire_2(result2);
+        })
+
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
@@ -217,9 +238,9 @@ bot.on('message', function(event) {
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
       };
     }
-    else{
-      client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
-    };    
+    // else{
+    //   client.pushMessage(userid,{type: 'text',text: '指令錯誤'});
+    // };    
   });
 
 //-------------------------------------------------------------------------
@@ -304,25 +325,19 @@ bot.on('message', function(event) {
     ask();
   };
 
-  function start_questionaire_2(){
-    var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `group` = "+group;
-    con.query(alluser, function (err, result) {
-      if (err) throw err;
-      console.log(result);    
+async function start_questionaire_2(result){
       var j=result.length;    
       for (var k=0;k<j;k++){
         userid=result[k].userid;
+        content='1.在剛剛的狀態中，主要互動對象為何？（0 = 沒有，1 = 陌生人，2 = 朋友/同事/同學，3 = 親密伴侶，4 = 家人，5 = 長官/長輩/師長，6 = 其他）'
         console.log('發問題');
         console.log('send to:'+userid);
-        client.pushMessage(userid,{type: 'text',text: content});
+        console.log(content);
+        await client.pushMessage(userid,{type: 'text',text: content});
       };
-    });
-  };
+};
 
-  function start_questionaire_1(){
-    var alluser ="SELECT * FROM `user` where `group` = "+group;
-    con.query(alluser, function (err, result) {
-      if (err) throw err;    
+async function start_questionaire_1(result){
       var j=result.length;
       for (var k=0;k<j;k++){
         userid=result[k].userid;
@@ -332,10 +347,9 @@ bot.on('message', function(event) {
         console.log('send to:'+userid);
         con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
         con.query("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')", function (err, result) {if (err) throw err;});
-        client.pushMessage(userid,{type: 'text',text: "你可以開始填寫問卷了"});
+        await client.pushMessage(userid,{type: 'text',text: "你可以開始填寫問卷了"});
       };
-    });
-  };
+};
   
 
 
@@ -356,25 +370,18 @@ bot.on('message', function(event) {
 
   
   
-function start_prompt_2(){
-  var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `schedule` = 1";
-  con.query(alluser, function (err, result) {
-    if (err) throw err;
+async function start_prompt_2(result){
     var j=result.length;
     for (k=0; k<j; k++){
       userid=result[k].userid;
       content = result[k].content;
-      client.pushMessage(userid,{type: 'text',text: content});
+      await client.pushMessage(userid,{type: 'text',text: content});
       console.log('發問題');
       console.log('send to:'+userid);
     };
-  });
 };
 
-function start_prompt_1(){
-  var alluser ="SELECT * FROM `user` where `schedule` = 1";
-  con.query(alluser, function (err, result) {
-    if (err) throw err;
+async function start_prompt_1(result){
     var j=result.length;
     for (k=0; k<j; k++){
       userid=result[k].userid;
@@ -384,11 +391,10 @@ function start_prompt_1(){
         if (err) throw err;
       });
       con.query("INSERT INTO `question_result` (userid, db_id, name) VALUES ('"+userid +"',"+db_id+",'"+nickname+"')", function (err, result) {if (err) throw err;});
-      client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
+      await client.pushMessage(userid,{type: 'text',text: "你可以開始問卷了"});
       console.log('發訊息');
       console.log('send to:'+userid);
     };
-  });
 };
 
 
