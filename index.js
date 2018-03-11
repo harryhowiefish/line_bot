@@ -5,13 +5,13 @@ const line = require('@line/bot-sdk');
 var schedule = require('node-schedule');
 var async = require('async');
 
-var channelAccessTokenvalue = "2VMlMDkyoFm35S+Zu936V5NUZTLReBHbwcvXfhIpP7rLtXnWgXY4bRAZbgrHtRZAgiWIS34dhJt7k9EXToy5CMrvmfPxQPwLy3P+kTvTy/hh2lh6dGwCspfip/eU7b9CBg39Q9nETYLwN1VNmGRwvQdB04t89/1O/w1cDnyilFU="
+var channelAccessTokenvalue = "ifJprJffOe13njEQd/m4TEy0NmmyZqvXJQ4IS9lLeng0cSqymzZez7GNAWZ3tIRMiY6B32ebyKBqll6LdiJh7qw/nMA2c1qgOQycwjsNxNVt7gn1wuxEdXazONpJQ3RawyZ8ZeZUvhEZ7GeArQ0bjgdB04t89/1O/w1cDnyilFU="
 
 //-------------------------------------------------------------------------
 //連結linebot
 var bot = linebot({
   channelId: "1537329241",
-  channelSecret: "291f1613b1cd07d9c036453fe7466218",
+  channelSecret: "8e9917bac71ecd10192e35ab298ded8a",
   channelAccessToken: channelAccessTokenvalue
 
 
