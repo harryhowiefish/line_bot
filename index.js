@@ -37,12 +37,13 @@ con.connect(function(err) {
 var rule = new schedule.RecurrenceRule();
 var start=0;
 var timetable= [];
-rule.minute = [0];;  
+rule.minute = [0,5,10,15,20,25,30,35,40,45,50,55];;  
 
 
 var update_schedule_rule = new schedule.RecurrenceRule();
 update_schedule_rule.second = [30];
 
+// load first time
 con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err, result) {
   var j=result.length;
   timetable = [];
@@ -50,10 +51,13 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
     timetable.push(Number(result[k].hour));
   };
   rule.hour = timetable;
-  console.log(timetable);
+  console.log("hour:"+timetable);
+  console.log("minute:"+rule.minute);
   var n = new Date();
   console.log(n.getHours()+":"+n.getMinutes());
 });
+
+
 
 
 var trigger = schedule.scheduleJob(rule, function(){
@@ -88,7 +92,7 @@ var next_day = schedule.scheduleJob(next_day_rule, function(){
         userid=result[k].userid;
         console.log('前一天問卷填寫截止');
         con.query("UPDATE `user` SET `flag`=0 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
-      };
+      };ㄑ
     });
 });
 
@@ -101,7 +105,9 @@ var update_schedule = schedule.scheduleJob('*/1 * * * *',function(){
       timetable.push(result[k].hour);
     };
     rule.hour = timetable;
-    console.log(timetable);
+    console.log("hour:"+timetable);
+    console.log("minute:"+rule.minute);
+
     trigger.reschedule(rule);
     var n = new Date();
     console.log(n.getHours()+":"+n.getMinutes());
@@ -374,7 +380,7 @@ async function start_prompt_2(result){
     var j=result.length;
     for (k=0; k<j; k++){
       userid=result[k].userid;
-      content = result[k].content;
+      content='1.在剛剛的狀態中，主要互動對象為何？（0 = 沒有，1 = 陌生人，2 = 朋友/同事/同學，3 = 親密伴侶，4 = 家人，5 = 長官/長輩/師長，6 = 其他）'
       await client.pushMessage(userid,{type: 'text',text: content});
       console.log('發問題');
       console.log('send to:'+userid);
