@@ -37,7 +37,7 @@ con.connect(function(err) {
 var rule = new schedule.RecurrenceRule();
 var start=0;
 var timetable= [];
-rule.minute = [0,5,10,15,20,25,30,35,40,45,50,55];;  
+rule.minute = [0];  
 
 
 var update_schedule_rule = new schedule.RecurrenceRule();
@@ -51,8 +51,7 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
     timetable.push(Number(result[k].hour));
   };
   rule.hour = timetable;
-  setTimeout(function(){console.log("hour:"+timetable)},100);
-  setTimeout(function(){console.log("minute:"+rule.minute)},100);
+  console.log("hour:"+timetable);
   var n = new Date();
   console.log(n.getHours()+":"+n.getMinutes());
 });
@@ -105,8 +104,7 @@ var update_schedule = schedule.scheduleJob('*/1 * * * *',function(){
       timetable.push(result[k].hour);
     };
     rule.hour = timetable;
-    setTimeout(function(){console.log("hour:"+timetable)},100);
-    setTimeout(function(){console.log("minute:"+rule.minute)},100);
+    console.log("hour:"+timetable);
     trigger.reschedule(rule);
     var n = new Date();
     console.log(n.getHours()+":"+n.getMinutes());
