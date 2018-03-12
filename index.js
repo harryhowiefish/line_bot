@@ -10,8 +10,8 @@ var channelAccessTokenvalue = "ifJprJffOe13njEQd/m4TEy0NmmyZqvXJQ4IS9lLeng0cSqym
 //-------------------------------------------------------------------------
 //連結linebot
 var bot = linebot({
-  channelId: "1537329241",
-  channelSecret: "8e9917bac71ecd10192e35ab298ded8a",
+  channelId: "1567593347",
+  channelSecret: "46981c3e5174a60ab609b00dbd5ae3c4",
   channelAccessToken: channelAccessTokenvalue
 
 
@@ -107,7 +107,6 @@ var update_schedule = schedule.scheduleJob('*/1 * * * *',function(){
     rule.hour = timetable;
     console.log("hour:"+timetable);
     console.log("minute:"+rule.minute);
-
     trigger.reschedule(rule);
     var n = new Date();
     console.log(n.getHours()+":"+n.getMinutes());
