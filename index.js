@@ -66,15 +66,15 @@ var trigger = schedule.scheduleJob(rule, function(){
   console.log(n.getHours()+":"+n.getMinutes());
 
   var alluser ="SELECT * FROM `user` where `schedule` = 1";
-  con.query(alluser, function (err, result) {
+  con.query(alluser, function (err, result3) {
     if (err) throw err;
-    start_prompt_1(result);
+    start_prompt_1(result3);
   })
 
   var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `schedule` = 1";
-  con.query(alluser, function (err, result) {
+  con.query(alluser, function (err, result4) {
     if (err) throw err;
-    start_prompt_2(result);
+    start_prompt_2(result4);
   })
 });
 
@@ -328,10 +328,10 @@ bot.on('message', function(event) {
     ask();
   };
 
-async function start_questionaire_2(result){
-      var j=result.length;    
+async function start_questionaire_2(result2){
+      var j=result2.length;    
       for (var k=0;k<j;k++){
-        userid=result[k].userid;
+        userid=result2[k].userid;
         content='1.在剛剛的狀態中，主要互動對象為何？（0 = 沒有，1 = 陌生人，2 = 朋友/同事/同學，3 = 親密伴侶，4 = 家人，5 = 長官/長輩/師長，6 = 其他）'
         console.log('發問題');
         console.log('send to:'+userid);
@@ -340,12 +340,12 @@ async function start_questionaire_2(result){
       };
 };
 
-async function start_questionaire_1(result){
-      var j=result.length;
+async function start_questionaire_1(result1){
+      var j=result1.length;
       for (var k=0;k<j;k++){
-        userid=result[k].userid;
-        db_id=result[k].id;
-        nickname=result[k].name;
+        userid=result1[k].userid;
+        db_id=result1[k].id;
+        nickname=result1[k].name;
         console.log('發訊息');
         console.log('send to:'+userid);
         con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {if (err) throw err;});
@@ -373,10 +373,10 @@ async function start_questionaire_1(result){
 
   
   
-async function start_prompt_2(result){
-    var j=result.length;
+async function start_prompt_2(result4){
+    var j=result4.length;
     for (k=0; k<j; k++){
-      userid=result[k].userid;
+      userid=result4[k].userid;
       content='1.在剛剛的狀態中，主要互動對象為何？（0 = 沒有，1 = 陌生人，2 = 朋友/同事/同學，3 = 親密伴侶，4 = 家人，5 = 長官/長輩/師長，6 = 其他）'
       await client.pushMessage(userid,{type: 'text',text: content});
       console.log('發問題');
@@ -384,12 +384,12 @@ async function start_prompt_2(result){
     };
 };
 
-async function start_prompt_1(result){
-    var j=result.length;
+async function start_prompt_1(result3){
+    var j=result3.length;
     for (k=0; k<j; k++){
-      userid=result[k].userid;
-      db_id=result[k].id;
-      nickname=result[k].name;
+      userid=result3[k].userid;
+      db_id=result3[k].id;
+      nickname=result3[k].name;
       con.query("UPDATE `user` SET `flag`=1, `question_num`=1 WHERE userid = '"+userid+"'", function (err, result) {
         if (err) throw err;
       });
