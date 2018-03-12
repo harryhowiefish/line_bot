@@ -51,8 +51,8 @@ con.query("SELECT `hour`  FROM `timetable` WHERE is_publish = 1", function (err,
     timetable.push(Number(result[k].hour));
   };
   rule.hour = timetable;
-  console.log("hour:"+timetable);
-  console.log("minute:"+rule.minute);
+  setTimeout(function(){console.log("hour:"+timetable)},100);
+  setTimeout(function(){console.log("minute:"+rule.minute)},100);
   var n = new Date();
   console.log(n.getHours()+":"+n.getMinutes());
 });
@@ -105,8 +105,8 @@ var update_schedule = schedule.scheduleJob('*/1 * * * *',function(){
       timetable.push(result[k].hour);
     };
     rule.hour = timetable;
-    console.log("hour:"+timetable);
-    console.log("minute:"+rule.minute);
+    setTimeout(function(){console.log("hour:"+timetable)},100);
+    setTimeout(function(){console.log("minute:"+rule.minute)},100);
     trigger.reschedule(rule);
     var n = new Date();
     console.log(n.getHours()+":"+n.getMinutes());
