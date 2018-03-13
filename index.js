@@ -69,13 +69,13 @@ var trigger = schedule.scheduleJob(rule, function(){
   var alluser ="SELECT * FROM `user` where `schedule` = 1";
   con.query(alluser, function (err, result) {
     if (err) throw err;
-    start_prompt_1(result);
+    setTimeout(function(){start_prompt_1(result)},100);
   })
 
   var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `schedule` = 1";
   con.query(alluser, function (err, result) {
     if (err) throw err;
-    start_prompt_2(result);
+    setTimeout(function(){start_prompt_2(result)},100);
   })
 });
 
@@ -174,13 +174,13 @@ bot.on('message', function(event) {
         var alluser ="SELECT * FROM `user` where `group` = "+group;
         con.query(alluser, function (err, result) {
           if (err) throw err;   
-          start_questionaire_1(result);
+          setTimeout(function(){start_questionaire_1(result)},100);
         });
  
         var alluser ="SELECT * FROM `user` left join `question` on `question_num` = `question`.`id` where `group` = "+group;
         con.query(alluser, function (err, result) {
           if (err) throw err;
-          start_questionaire_2(result);
+          setTimeout(function(){start_questionaire_2(result)},100);
         })
 
         client.pushMessage(userid,{type: 'text',text: '指令完成'});
